@@ -1,9 +1,11 @@
-mkdir -p ~/.streamlit/
+from setuptools import setup, find_packages
 
-echo "\
-[server]\n\
-port = $PORT\n\
-enableCORS = false\n\
-headless = true\n\
-\n\
-" > ~/.streamlit/config.toml
+setup(
+    name='book-recommendation-system',
+    version='0.1',
+    packages=find_packages(),
+    install_requires=[
+        'streamlit',
+        'numpy',
+    ],
+)
