@@ -62,11 +62,11 @@ here is a demo,
 
 # Demo:
 
-<img src="demo/1.png" alt="workflow" width="70%">
+<https://github.com/kattubadimohammad/Book-Recommendation-System/blob/main/demo/Demo_1.png" alt="workflow" width="70%">
 
-<img src="demo/2.png" alt="workflow" width="70%">
+<https://github.com/kattubadimohammad/Book-Recommendation-System/blob/main/demo/Demo_2.png" alt="workflow" width="70%">
 
-<img src="demo/3.png" alt="workflow" width="70%">
+<https://github.com/kattubadimohammad/Book-Recommendation-System/blob/main/demo/Demo_3.png" alt="workflow" width="70%">
 
 
 # Dataset has been used:
