@@ -62,12 +62,11 @@ here is a demo,
 
 # Demo:
 
-<https://github.com/kattubadimohammad/Book-Recommendation-System/blob/main/demo/Demo_1.png" alt="workflow" width="70%">
+![workflow](https://github.com/kattubadimohammad/Book-Recommendation-System/blob/main/demo/Demo_1.png)
 
-<https://github.com/kattubadimohammad/Book-Recommendation-System/blob/main/demo/Demo_2.png" alt="workflow" width="70%">
+![workflow](https://github.com/kattubadimohammad/Book-Recommendation-System/blob/main/demo/Demo_2.png)
 
-<https://github.com/kattubadimohammad/Book-Recommendation-System/blob/main/demo/Demo_3.png" alt="workflow" width="70%">
-
+![workflow](https://github.com/kattubadimohammad/Book-Recommendation-System/blob/main/demo/Demo_3.png)
 
 # Dataset has been used:
 
