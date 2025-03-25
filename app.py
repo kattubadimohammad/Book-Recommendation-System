@@ -7,48 +7,42 @@ Date: 2023-Dec-31
 import pickle
 import streamlit as st
 import numpy as np
-
+import pandas as pd
 
 st.header('Book Recommendation System')
-model = pickle.load(open('artifacts/model.pkl', 'rb'), encoding='latin1')
-book_names = pickle.load(open('artifacts/user_ids.pkl', 'rb'), encoding='latin1')
-final_rating = pickle.load(open('artifacts/final_rating.pkl', 'rb'), encoding='latin1')
-book_pivot = pickle.load(open('artifacts/book_pivot.pkl', 'rb'), encoding='latin1')
+
+# Load models and data with error handling
+try:
+    model = pickle.load(open('artifacts/model.pkl', 'rb'))
+    book_names = pickle.load(open('artifacts/user_ids.pkl', 'rb'))
+    final_rating = pickle.load(open('artifacts/final_rating.pkl', 'rb'))
+    book_pivot = pickle.load(open('artifacts/book_pivot.pkl', 'rb'))
+except Exception as e:
+    st.error(f"Error loading model or data: {e}")
+    st.stop()
 
 def fetch_poster(suggestion):
-    user_id = []
-    ids_index = []
     poster_url = []
-
-    for book_id in suggestion:
-        user_id.append(book_pivot.columns[book_id])
-
-    for name in user_id[0]: 
-        ids = np.where(final_rating['user_id'] == name)[0][0]
-        ids_index.append(ids)
-
-    for idx in ids_index:
-        url = final_rating.iloc[idx]['image_url']
-        poster_url.append(url)
-
+    for book_id in suggestion[0]:
+        book_name = book_pivot.index[book_id]
+        try:
+            url = final_rating.loc[final_rating['user_id'] == book_name, 'image_url'].values[0]
+            poster_url.append(url)
+        except IndexError:
+            st.warning(f"Poster not found for {book_name}")
+            poster_url.append('https://via.placeholder.com/150')  # Placeholder image
     return poster_url
 
-
-
 def recommend_book(user_id):
-    books_list = []
-    book_id = np.where(book_pivot.columns == user_id)[0][0]
-    distance, suggestion = model.kneighbors(book_pivot.iloc[book_id,:].values.reshape(1,-1), n_neighbors=6 )
-
-    poster_url = fetch_poster(suggestion)
-    
-    for i in range(len(suggestion)):
-            books = book_pivot.index[suggestion[i]]
-            for j in books:
-                books_list.append(j)
-    return books_list , poster_url       
-
-
+    try:
+        book_id = np.where(book_pivot.columns == user_id)[0][0]
+        distance, suggestion = model.kneighbors(book_pivot.iloc[book_id, :].values.reshape(1, -1), n_neighbors=6)
+        poster_url = fetch_poster(suggestion)
+        books_list = book_pivot.index[suggestion[0]]
+        return books_list, poster_url
+    except Exception as e:
+        st.error(f"Error recommending books: {e}")
+        return [], []
 
 selected_books = st.selectbox(
     "Type or select a book from the dropdown",
@@ -56,21 +50,13 @@ selected_books = st.selectbox(
 )
 
 if st.button('Show Recommendation'):
-    recommended_books,poster_url = recommend_book(selected_books)
-    col1, col2, col3, col4, col5 = st.columns(5)
-    with col1:
-        st.text(recommended_books[1])
-        st.image(poster_url[1])
-    with col2:
-        st.text(recommended_books[2])
-        st.image(poster_url[2])
+    recommended_books, poster_url = recommend_book(selected_books)
 
-    with col3:
-        st.text(recommended_books[3])
-        st.image(poster_url[3])
-    with col4:
-        st.text(recommended_books[4])
-        st.image(poster_url[4])
-    with col5:
-        st.text(recommended_books[5])
-        st.image(poster_url[5])
+    if len(recommended_books) < 5:
+        st.error("Not enough recommendations found.")
+    else:
+        cols = st.columns(5)
+        for i in range(5):
+            with cols[i]:
+                st.text(recommended_books[i+1])
+                st.image(poster_url[i+1])
