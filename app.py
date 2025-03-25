@@ -26,14 +26,18 @@ def fetch_poster(suggestion):
     for book_id in suggestion[0]:
         try:
             book_name = book_pivot.index[book_id]
-            # Use .iloc instead of .values to avoid errors
-            url = final_rating.loc[final_rating['book_name'] == book_name, 'image_url'].iloc[0]
-            poster_url.append(url)
-        except (IndexError, KeyError):
-            st.warning(f"Poster not found for {book_name}")
-            poster_url.append('https://via.placeholder.com/150')  # Placeholder image
+            # Adjust to check using 'book_name' instead of 'user_id'
+            matching_books = final_rating[final_rating['book_name'] == book_name]
+            if not matching_books.empty:
+                url = matching_books['image_url'].iloc[0]
+                poster_url.append(url)
+            else:
+                st.warning(f"Poster not found for {book_name}")
+                poster_url.append('https://via.placeholder.com/150')  # Placeholder image
+        except Exception as e:
+            st.warning(f"Error fetching poster for {book_name}: {e}")
+            poster_url.append('https://via.placeholder.com/150')
     return poster_url
-
 
 def recommend_book(user_id):
     books_list = []
