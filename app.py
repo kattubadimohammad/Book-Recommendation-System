@@ -8,9 +8,10 @@ import pickle
 import streamlit as st
 import numpy as np
 import pandas as pd
-print(pd.__version__)
+import sklearn  # Import sklearn to check version
 
-
+print(f"pandas version: {pd.__version__}")
+print(f"scikit-learn version: {sklearn.__version__}")
 
 st.header('Book Recommendation System')
 model = pickle.load(open('artifacts/model.pkl','rb'))
@@ -20,9 +21,9 @@ book_pivot = pickle.load(open('artifacts/book_pivot.pkl','rb'))
 
 
 def fetch_poster(suggestion):
-    user_id = []
-    ids_index = []
-    poster_url = []
+    user_id =
+    ids_index =
+    poster_url =
 
     for book_id in suggestion:
         user_id.append(book_pivot.columns[book_id])
@@ -40,7 +41,7 @@ def fetch_poster(suggestion):
 
 
 def recommend_book(user_id):
-    books_list = []
+    books_list =
     book_id = np.where(book_pivot.columns == user_id)[0][0]
     distance, suggestion = model.kneighbors(book_pivot.iloc[book_id,:].values.reshape(1,-1), n_neighbors=6 )
 
