@@ -1,1 +1,1 @@
-web: streamlit run app.py --server.port=10000
+web: streamlit run app.py --server.port=$PORT
