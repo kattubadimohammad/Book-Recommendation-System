@@ -7,23 +7,13 @@ Date: 2023-Dec-31
 import pickle
 import streamlit as st
 import numpy as np
-from fastapi import FastAPI
-import uvicorn
-import threading
 
-# Initialize FastAPI
-app = FastAPI()
 
-@app.get("/healthz")
-async def health_check():
-    return {"status": "ok"}
-
-# Streamlit App
 st.header('Book Recommendation System')
-model = pickle.load(open('artifacts/model.pkl', 'rb'))
-book_names = pickle.load(open('artifacts/user_ids.pkl', 'rb'))
-final_rating = pickle.load(open('artifacts/final_rating.pkl', 'rb'))
-book_pivot = pickle.load(open('artifacts/book_pivot.pkl', 'rb'))
+model = pickle.load(open('artifacts/model.pkl','rb'))
+book_names = pickle.load(open('artifacts/user_ids.pkl','rb'))
+final_rating = pickle.load(open('artifacts/final_rating.pkl','rb'))
+book_pivot = pickle.load(open('artifacts/book_pivot.pkl','rb'))
 
 
 def fetch_poster(suggestion):
@@ -45,18 +35,20 @@ def fetch_poster(suggestion):
     return poster_url
 
 
+
 def recommend_book(user_id):
     books_list = []
     book_id = np.where(book_pivot.columns == user_id)[0][0]
-    distance, suggestion = model.kneighbors(book_pivot.iloc[book_id, :].values.reshape(1, -1), n_neighbors=6)
+    distance, suggestion = model.kneighbors(book_pivot.iloc[book_id,:].values.reshape(1,-1), n_neighbors=6 )
 
     poster_url = fetch_poster(suggestion)
     
     for i in range(len(suggestion)):
-        books = book_pivot.index[suggestion[i]]
-        for j in books:
-            books_list.append(j)
-    return books_list, poster_url
+            books = book_pivot.index[suggestion[i]]
+            for j in books:
+                books_list.append(j)
+    return books_list , poster_url       
+
 
 
 selected_books = st.selectbox(
@@ -65,7 +57,7 @@ selected_books = st.selectbox(
 )
 
 if st.button('Show Recommendation'):
-    recommended_books, poster_url = recommend_book(selected_books)
+    recommended_books,poster_url = recommend_book(selected_books)
     col1, col2, col3, col4, col5 = st.columns(5)
     with col1:
         st.text(recommended_books[1])
@@ -73,6 +65,7 @@ if st.button('Show Recommendation'):
     with col2:
         st.text(recommended_books[2])
         st.image(poster_url[2])
+
     with col3:
         st.text(recommended_books[3])
         st.image(poster_url[3])
@@ -82,11 +75,3 @@ if st.button('Show Recommendation'):
     with col5:
         st.text(recommended_books[5])
         st.image(poster_url[5])
-
-
-# Run FastAPI in a separate thread
-def run_api():
-    uvicorn.run(app, host="0.0.0.0", port=8000)
-
-api_thread = threading.Thread(target=run_api, daemon=True)
-api_thread.start()
