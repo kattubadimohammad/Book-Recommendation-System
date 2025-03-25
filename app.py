@@ -13,14 +13,10 @@ st.header('Book Recommendation System')
 
 # Load models and data with error handling
 try:
-    with open('artifacts/model.pkl', 'rb') as f:
-        model = pickle.load(f)
-    with open('artifacts/user_ids.pkl', 'rb') as f:
-        book_names = pickle.load(f)
-    with open('artifacts/final_rating.pkl', 'rb') as f:
-        final_rating = pickle.load(f)
-    with open('artifacts/book_pivot.pkl', 'rb') as f:
-        book_pivot = pickle.load(f)
+    model = pickle.load(open('artifacts/model.pkl','rb'))
+    book_names = pickle.load(open('artifacts/user_ids.pkl','rb'))
+    final_rating = pickle.load(open('artifacts/final_rating.pkl','rb'))
+    book_pivot = pickle.load(open('artifacts/book_pivot.pkl','rb'))
 except Exception as e:
     st.error(f"Error loading model or data: {e}")
     st.stop()
@@ -28,8 +24,8 @@ except Exception as e:
 def fetch_poster(suggestion):
     poster_url = []
     for book_id in suggestion[0]:
-        book_name = book_pivot.index[book_id]
         try:
+            book_name = book_pivot.index[book_id]
             url = final_rating.loc[final_rating['user_id'] == book_name, 'image_url'].values[0]
             poster_url.append(url)
         except IndexError:
