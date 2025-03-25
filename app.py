@@ -21,9 +21,9 @@ book_pivot = pickle.load(open('artifacts/book_pivot.pkl','rb'))
 
 
 def fetch_poster(suggestion):
-    user_id =
-    ids_index =
-    poster_url =
+    user_id = []  # Initialize as an empty list
+    ids_index = []  # Initialize as an empty list
+    poster_url = []  # Initialize as an empty list
 
     for book_id in suggestion:
         user_id.append(book_pivot.columns[book_id])
@@ -41,17 +41,17 @@ def fetch_poster(suggestion):
 
 
 def recommend_book(user_id):
-    books_list =
+    books_list = [] # Initialize as an empty list
     book_id = np.where(book_pivot.columns == user_id)[0][0]
     distance, suggestion = model.kneighbors(book_pivot.iloc[book_id,:].values.reshape(1,-1), n_neighbors=6 )
 
     poster_url = fetch_poster(suggestion)
     
     for i in range(len(suggestion)):
-            books = book_pivot.index[suggestion[i]]
-            for j in books:
-                books_list.append(j)
-    return books_list , poster_url       
+        books = book_pivot.index[suggestion[i]]
+        for j in books:
+            books_list.append(j)
+    return books_list, poster_url  # Corrected return statement (comma instead of space)
 
 
 
