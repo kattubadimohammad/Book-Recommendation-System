@@ -7,6 +7,9 @@ Date: 2023-Dec-31
 import pickle
 import streamlit as st
 import numpy as np
+import pandas as pd
+print(pd.__version__)
+
 
 
 st.header('Book Recommendation System')
