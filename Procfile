@@ -1,2 +1,2 @@
 # Procfile
-web: streamlit run app1.py --server.port=$PORT
+web: streamlit run app.py --server.port=$PORT
